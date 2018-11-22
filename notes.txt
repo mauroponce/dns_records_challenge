@@ -10,4 +10,46 @@ gem 'factory_bot_rails'
 gem 'rspec-rails'
 gem 'faker'
 
+
 bundle exec rails generate rspec:install
+bundle exec rails g scaffold DNSRecord ipv4_address:integer
+bundle exec rails g model Hostname name
+bundle exec rails g model HostnameDNSRecordAssociation dns_record:references hostname:references
+
+dns2 = DnsRecord.create(ipv4_address: '192.168.1.15')
+dns1 = DnsRecord.create(ipv4_address: '')
+
+bundle exec rake db:create:all
+bundle exec rake db:migrate
+bundle exec rake db:seed
+
+Request
+{
+  "search" : {
+    "page_number" : 10,
+    "included_hostnames" : ["ipsum.com", "dolor.com"],
+    "excluded_hostnames" : ["sit.com"]
+  }
+}
+
+Response
+{
+    "dns_records_number": 2,
+    "dns_records": [
+        {
+            "ID": 111,
+            "IP": "1.1.1.1"
+        },
+        {
+            "ID": 113,
+            "IP": "3.3.3.3"
+        }
+    ],
+    "hostnames": [
+        "Hostname: lorem.com, Number of matching DNS records: 1",
+        "Hostname: amet.com, Number of matching DNS records: 2"
+    ]
+}
+
+
+
