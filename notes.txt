@@ -1,0 +1,13 @@
+mkdir dns_records_api
+cd dns_records_api
+rvm --create --ruby-version ruby-2.4.1@dns_records_api
+gem install rails --version=5.2.0
+rails new . --api -T
+
+# Add test suite gems
+gem 'database_cleaner'
+gem 'factory_bot_rails'
+gem 'rspec-rails'
+gem 'faker'
+
+bundle exec rails generate rspec:install
