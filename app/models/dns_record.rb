@@ -22,8 +22,10 @@ class DnsRecord < ApplicationRecord
     included_hostnames = opts[:included_hostnames]
     excluded_hostnames = opts[:excluded_hostnames]
 
-    ids_containing_included = dns_record_ids_by_hostnames(included_hostnames)
-    ids_containing_excluded = dns_record_ids_by_hostnames(excluded_hostnames)
+    ids_containing_included = dns_record_ids_by_hostnames(
+      included_hostnames, opts[:page_number])
+    ids_containing_excluded = dns_record_ids_by_hostnames(
+      excluded_hostnames, opts[:page_number])
 
     matching_dns_ids = ids_containing_included - ids_containing_excluded
 
@@ -64,11 +66,12 @@ class DnsRecord < ApplicationRecord
     end
   end
 
-  def self.dns_record_ids_by_hostnames(hostnames)
+  def self.dns_record_ids_by_hostnames(hostnames, limit)
     DnsRecord.joins(:hostnames).
       where("hostnames.name IN (?)", hostnames).
       having("count(distinct hostnames.name) = ?", hostnames.length).
       group('id').
+      limit(limit).
       pluck('id')
   end
 end
