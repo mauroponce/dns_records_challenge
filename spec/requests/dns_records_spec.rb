@@ -13,6 +13,7 @@ RSpec.describe "DnsRecords", type: :request do
 
         it "returns the DNS record ids" do
           create_dns_record
+          expect(json_response).to have_key('ID')
           expect(response).to have_http_status(:created)
         end
       end
@@ -26,6 +27,7 @@ RSpec.describe "DnsRecords", type: :request do
 
         it "returns the DNS record ids" do
           create_dns_record
+          expect(json_response).to have_key('ID')
           expect(response).to have_http_status(:created)
         end
       end
